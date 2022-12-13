@@ -14,45 +14,78 @@ import com.cart.app.dto.ProductDetail;
 @Service
 public class CartServiceImpl implements CartService {
 
-	@Autowired private CartRepository cartRepo;
-	@Autowired private ProductsRepository productRepo;
-	
+	@Autowired
+	private CartRepository cartRepo;
+	@Autowired
+	private ProductsRepository productRepo;
+
 	@Override
-	public Cart addProductToCart(String cartId, String productId) {
-		
-		Optional<Cart> optCart = this.cartRepo.findById(cartId);
-		if(optCart.isEmpty()) {
-			
+	public Cart addProductToCart(ProductDetail productDetail) {
+
+		Optional<Cart> optCart = this.cartRepo.findById(productDetail.getCartId());
+		if (optCart.isEmpty()) {
+
 		}
 		Cart cart = optCart.get();
-		
-		Optional<Product> optProduct = this.productRepo.findById(productId);
-		if(optProduct.isEmpty()) {
-			
+
+		if (cart.getProducts().containsKey(productDetail.getProductId())) {
+			Product product = cart.getProducts().get(productDetail.getProductId());
+			product.setQuantity(product.getQuantity() + productDetail.getQty());
+
+			return this.cartRepo.save(cart);
+		}
+
+		Optional<Product> optProduct = this.productRepo.findById(productDetail.getProductId());
+		if (optProduct.isEmpty()) {
+
 		}
 		Product product = optProduct.get();
-		ProductDetail productDetails = new ProductDetail(productId, 1);
-		cart.getProductDetails().add(productDetails);
-		
+
+		product.setQuantity(productDetail.getQty());
+
+		cart.getProducts().put(product.getId(), product);
 		return this.cartRepo.save(cart);
 	}
 
 	@Override
 	public Cart deleteProductFromCart(String cartId, String productId) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Cart> optCart = this.cartRepo.findById(cartId);
+		if (optCart.isEmpty()) {
+
+		}
+		Cart cart = optCart.get();
+		if (!cart.getProducts().containsKey(productId)) {
+
+		}
+		cart.getProducts().remove(productId);
+
+		return this.cartRepo.save(cart);
 	}
 
 	@Override
 	public Cart getCartById(String cartId) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Cart> optCart = this.cartRepo.findById(cartId);
+		if (optCart.isEmpty()) {
+
+		}
+
+		return optCart.get();
 	}
 
 	@Override
-	public Cart setProductQtyToCart(String cartId, String productId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Cart setProductQtyToCart(String cartId, String productId, Integer qty) {
+		Optional<Cart> optCart = this.cartRepo.findById(cartId);
+		if (optCart.isEmpty()) {
+
+		}
+		Cart cart = optCart.get();
+		if (!cart.getProducts().containsKey(productId)) {
+
+		}
+
+		cart.getProducts().get(productId).setQuantity(qty);
+
+		return this.cartRepo.save(cart);
 	}
 
 	@Override

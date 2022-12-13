@@ -1,22 +1,38 @@
 package com.cart.app.dto;
 
 public class ProductDetail {
-	private String id;
+	
+	private String productId;
+	private String cartId;
 	private Integer qty;
+	
 	public ProductDetail() {
 		super();
 	}
-	public ProductDetail(String id, Integer qty) {
+
+	public ProductDetail(String productId, String cartId, Integer qty) {
 		super();
-		this.id = id;
+		this.productId = productId;
+		this.cartId = cartId;
 		this.qty = qty;
 	}
-	public String getId() {
-		return id;
+
+	public String getProductId() {
+		return productId;
 	}
-	public void setId(String id) {
-		this.id = id;
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
+
+	public String getCartId() {
+		return cartId;
+	}
+
+	public void setCartId(String cartId) {
+		this.cartId = cartId;
+	}
+
 	public Integer getQty() {
 		return qty;
 	}
